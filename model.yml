@@ -1,0 +1,60 @@
+queues:
+  fila1:
+    capacity: -1           # Capacidade ilimitada (infinita)
+    servers: 1             # Um servidor
+    minArrival: 2.0        # Tempo mínimo de chegada (2 minutos)
+    maxArrival: 4.0        # Tempo máximo de chegada (4 minutos)
+    minService: 1.0        # Tempo mínimo de serviço (1 minuto)
+    maxService: 2.0        # Tempo máximo de serviço (2 minutos)
+
+  fila2:
+    capacity: 5            # Capacidade máxima de 5 clientes
+    servers: 2             # Dois servidores
+    minArrival: 0.0        # Sem chegada direta, apenas por roteamento
+    maxArrival: 0.0        # Sem chegada direta, apenas por roteamento
+    minService: 4.0        # Tempo mínimo de serviço (4 minutos)
+    maxService: 8.0        # Tempo máximo de serviço (8 minutos)
+
+  fila3:
+    capacity: 10           # Capacidade máxima de 10 clientes
+    servers: 2             # Dois servidores
+    minArrival: 0.0        # Sem chegada direta, apenas por roteamento
+    maxArrival: 0.0        # Sem chegada direta, apenas por roteamento
+    minService: 5.0        # Tempo mínimo de serviço (5 minutos)
+    maxService: 15.0       # Tempo máximo de serviço (15 minutos)
+
+# Rede de filas 
+network:
+  - source: fila1
+    target: fila2
+    probability: 0.8   # 80% probability from Queue 1 to Queue 2
+  - source: fila1
+    target: fila3
+    probability: 0.2   # 20% probability from Queue 1 to Queue 3
+  - source: fila2
+    target: fila1
+    probability: 0.3   # 30% back to Queue 1
+  - source: fila2
+    target: fila2
+    probability: 0.5   # 50% stays in Queue 2
+  - source: fila2
+    target: exit
+    probability: 0.2   # 20% exits the system
+  - source: fila3
+    target: fila1
+    probability: 0.3   # 30% back to Queue 1
+  - source: fila3
+    target: fila2
+    probability: 0.4   # 40% goes to Queue 2
+  - source: fila3
+    target: exit
+    probability: 0.3   # 30% exits the system
+
+# Chegada inicial de clientes
+arrivals:
+  fila1: 2.0  
+
+# Sementes para geração de números aleatórios
+seeds: 
+  - 12345 
+  - 67890
